@@ -5,7 +5,14 @@ import { wktToGeoJSON } from '@terraformer/wkt';
 
 const prisma = new PrismaClient();
 
-export const getManager = async (req: Request, res: Response): Promise<void> => {
+type CognitoParams = {
+  cognitoId: string;
+};
+
+export const getManager = async (
+  req: Request<CognitoParams>,
+  res: Response
+): Promise<void> => {
   try {
     const { cognitoId } = req.params;
      if (!cognitoId) {
@@ -43,7 +50,7 @@ export const createManager = async (req: Request, res: Response): Promise<void> 
 }
 }
 
-export const updateManager = async (req: Request, res: Response): Promise<void> => {
+export const updateManager = async (req: Request<CognitoParams>, res: Response): Promise<void> => {
   try {
     const {cognitoId} = req.params;
      if (!cognitoId) {
@@ -65,7 +72,7 @@ export const updateManager = async (req: Request, res: Response): Promise<void> 
 }
 }
 
-export const getManagerProperties = async (req: Request, res: Response): Promise<void> => {
+export const getManagerProperties = async (req: Request<CognitoParams>, res: Response): Promise<void> => {
     try {
        const { cognitoId } = req.params
        if (!cognitoId) {

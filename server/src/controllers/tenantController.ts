@@ -4,7 +4,11 @@ import { wktToGeoJSON } from '@terraformer/wkt';
 
 const prisma = new PrismaClient();
 
-export const getTenant = async (req: Request, res: Response): Promise<void> => {
+type CognitoParams = {
+  cognitoId: string;
+};
+
+export const getTenant = async (req: Request<CognitoParams>, res: Response): Promise<void> => {
   try {
     const { cognitoId } = req.params;
      if (!cognitoId) {
@@ -48,7 +52,7 @@ export const createTenant = async (req: Request, res: Response): Promise<void> =
 }
 }
 
-export const updateTenant = async (req: Request, res: Response): Promise<void> => {
+export const updateTenant = async (req: Request<CognitoParams>, res: Response): Promise<void> => {
   try {
     const {cognitoId} = req.params;
      if (!cognitoId) {
@@ -70,7 +74,7 @@ export const updateTenant = async (req: Request, res: Response): Promise<void> =
 }
 }
 
-export const getCurrentResidences = async (req: Request, res: Response): Promise<void> => {
+export const getCurrentResidences = async (req: Request<CognitoParams>, res: Response): Promise<void> => {
     try {
        const { cognitoId } = req.params
        if (!cognitoId) {
@@ -119,7 +123,12 @@ export const getCurrentResidences = async (req: Request, res: Response): Promise
 
   }
 
-  export const addFavoriteProperty = async (req: Request, res: Response): Promise<void> => {
+  type FavoriteParams = {
+  cognitoId: string;
+  propertyId: string;
+};
+
+  export const addFavoriteProperty = async (req: Request<FavoriteParams>, res: Response): Promise<void> => {
     try {
         const { cognitoId, propertyId} = req.params
         const tenant = await prisma.tenant.findUnique({
@@ -140,7 +149,7 @@ export const getCurrentResidences = async (req: Request, res: Response): Promise
             },
             include: {favorites: true}
           })
-          res.json(updateTenant)
+          res.json(updatedTenant)
         } else {
           res.status(409).json({ message: "Property already added as favorite"})
         }
@@ -151,7 +160,7 @@ export const getCurrentResidences = async (req: Request, res: Response): Promise
     }
   }
 
-   export const removeFavoriteProperty = async (req: Request, res: Response): Promise<void> => {
+   export const removeFavoriteProperty = async (req: Request<FavoriteParams>, res: Response): Promise<void> => {
     try {
         const { cognitoId, propertyId} = req.params
         const propertyIdNumber = Number(propertyId)
