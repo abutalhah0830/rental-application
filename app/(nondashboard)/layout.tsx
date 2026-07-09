@@ -13,7 +13,12 @@ const Layout = ({ children }: { children: React.ReactNode}) => {
       const [isLoading, setIsLoading] = useState(true);
   
       useEffect(() => {
-          if (authUser) {
+             if (authLoading) return;
+
+              if (!authUser) {
+                 setIsLoading(false);
+                return;
+               }
               const userRole = authUser.userRole?.toLowerCase();
               if(
                   (userRole === "manager" && pathname.startsWith("/search")) ||
@@ -26,8 +31,8 @@ const Layout = ({ children }: { children: React.ReactNode}) => {
               } else{
                  setIsLoading(false)   
               }
-          }
-      }, [authUser, router, pathname]);
+          
+      }, [authLoading, authUser, router, pathname]);
   
       if (authLoading || isLoading) return <>Loading...</>  
       
