@@ -122,7 +122,7 @@ export const addFavoriteProperty = async (req, res) => {
                 },
                 include: { favorites: true }
             });
-            res.json(updateTenant);
+            res.json(updatedTenant);
         }
         else {
             res.status(409).json({ message: "Property already added as favorite" });

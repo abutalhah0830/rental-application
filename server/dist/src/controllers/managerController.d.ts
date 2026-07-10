@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
-export declare const getManager: (req: Request, res: Response) => Promise<void>;
+type CognitoParams = {
+    cognitoId: string;
+};
+export declare const getManager: (req: Request<CognitoParams>, res: Response) => Promise<void>;
 export declare const createManager: (req: Request, res: Response) => Promise<void>;
-export declare const updateManager: (req: Request, res: Response) => Promise<void>;
-export declare const getManagerProperties: (req: Request, res: Response) => Promise<void>;
+export declare const updateManager: (req: Request<CognitoParams>, res: Response) => Promise<void>;
+export declare const getManagerProperties: (req: Request<CognitoParams>, res: Response) => Promise<void>;
+export {};
 //# sourceMappingURL=managerController.d.ts.map
