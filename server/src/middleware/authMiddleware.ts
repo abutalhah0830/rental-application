@@ -17,33 +17,46 @@ declare global {
 }
 
 export const authMiddleware = (allowedRoles: string[]) => {
-    return (req: Request, res: Response, next: NextFunction): void =>{
-        const token = req.headers.authorization?.split(" ")[1];
+  return (req: Request, res: Response, next: NextFunction): void => {
 
-        if(!token) {
-            res.status(401).json({ message: "Unauthorized" });
-            return;
-        }
+    console.log("Authorization Header:", req.headers.authorization);
 
-        try {
-            const decoded = jwt.decode(token) as DecodedToken;
-            const userRole = decoded["custom:role"] || "";
-            req.user = {
-                id: decoded.sub,
-                role: userRole
-            }
+    const token = req.headers.authorization?.split(" ")[1];
 
-            const hasAccess = allowedRoles.includes(userRole.toLowerCase());
-            if(!hasAccess) {
-                res.status(403).json({ message: "Access denied" });
-                return;
-            }
-        } catch (err) {
-            console.error("Failed to decode token:", err);
-            res.status(400).json({ message: "Invalid token" });
-            return;
+    console.log("Extracted Token:", token);
 
-        }
-        next();
+    if (!token) {
+      console.log("NO TOKEN FOUND");
+      res.status(401).json({ message: "Unauthorized" });
+      return;
     }
-}
+
+    try {
+      const decoded = jwt.decode(token) as DecodedToken;
+
+      console.log("Decoded Token:", decoded);
+
+      const userRole = decoded["custom:role"] || "";
+
+      console.log("Role:", userRole);
+
+      req.user = {
+        id: decoded.sub,
+        role: userRole,
+      };
+
+      const hasAccess = allowedRoles.includes(userRole.toLowerCase());
+
+      if (!hasAccess) {
+        console.log("Access Denied");
+        res.status(403).json({ message: "Access denied" });
+        return;
+      }
+
+      next();
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ message: "Invalid token" });
+    }
+  };
+};
